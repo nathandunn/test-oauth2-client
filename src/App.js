@@ -55,7 +55,7 @@ export async function testA() {
             // 'Bearer': `Bearer jwt=${authToken}`,
             // 'Set-Cookie': `jwt=${authToken}`,
             'withCredentials': true,
-            'credentials': 'include',
+            // 'credentials': 'include',
 
         }
     }
@@ -76,6 +76,7 @@ export default function App(props) {
 
     console.log('input props')
     const [authorized,setAuthorized] = useState('unauthorized');
+    const [profile,setProfile] = useState(undefined);
 
 
 
@@ -91,6 +92,11 @@ export default function App(props) {
     return (
         <div className="App">
                 Authorized: {authorized}
+            {profile &&
+                <div>
+            User: {profile.name} {profile.email}
+                </div>
+            }
                 <GoogleLogin
                     clientId="654629507592-9i8vh19esnv2f5is1roofl3c9v7sla54.apps.googleusercontent.com"
                     buttonText="Login"
@@ -98,14 +104,15 @@ export default function App(props) {
                         console.log('response', response)
                         refreshTokenSetup(response)
                         setAuthorized('authorized')
-                        // testA().then(
-                        //     (res) => {
-                        //         console.log('follow up response')
-                        //     },
-                        //     (err) => {
-                        //         console.log('follow up err', err)
-                        //     },
-                        // )
+                        setProfile(response.profileObj)
+                        testA().then(
+                            (res) => {
+                                console.log('follow up response')
+                            },
+                            (err) => {
+                                console.log('follow up err', err)
+                            },
+                        )
                     }}
                     onFailure={(err) => console.error('error', err)}
                     cookiePolicy={'single_host_origin'}
@@ -118,6 +125,7 @@ export default function App(props) {
                     buttonText="Logout"
                     onLogoutSuccess={(response) => {
                         setAuthorized('unauthorized')
+                        setProfile(null)
                     }}
                     onFailure={(err) => console.error('error', err)}
                     // onLogoutSuccess={logout}
