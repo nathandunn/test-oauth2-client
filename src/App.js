@@ -35,7 +35,7 @@ function getCookie(cname) {
     return "";
 }
 
-export async function testA() {
+export async function testA(identifier) {
 
 
     console.log('test A')
@@ -53,6 +53,7 @@ export async function testA() {
             // 'Set-Cookie':'JSESSIONID=B3CC0AD705E2AFEA3B1C378059789752; jwt=eyJhbGciOiJIUzI1NiJ9.eyJwcmluY2lwYWwiOiJINHNJQUFBQUFBQUFBSlZWWFd3VVZSUysyMjVwZ1FvdENvSkpjZFhLajVhWlVoYmEwaEIrMmdJTmE0dGROMUZNV09cL08zTjI5ZFBiZThkNHozZTBEQ2lyeW9GR2lRa2hNakFcLzZCSW1QR2g5TWlDOG1QRUZNVEV5TUJoTVNFM2swdkJuUG5abmQyZFlRZEI0bWszUHZPZWM3M1wvbk9tZXYzU0pkV1pIZEZVZTVweVwvZUNDaGVXOWhVWEZjMmNRSEZZc2hUVFlFa2FRTldhTSsrQ1ptcmRsM1wvZFByMTVha2NIU2VYSTJnQXRKNVVzYzQ4QjJaYVRxbUw3MU1tZXNSMnBtTzFISlwvYWtyTldraU85Tk5CUVp3WXR4c3JLaU5WYVhhc0ZxcFRXK2xvbnNNZ2pSbWJ3a2ZGSlwvZDVEdVU2U2ZPbzRNQk14S01kM3d1V0x1S2RLWDJITFNXVENtalE2ZU1BR2NlcnI5YWpjVHRPUXhGd3N3WlVuTXlyRlVzajUzaGk1U093RHUyWGtHRXpuUzQxT3RFWjBMWkVOMDZGRlJzZk5nb0p0ekExTmdCYStUTjBpNjRhZndRVnFmTlZjdEU4ZWFsSjdISE9CUzZNR0NxRW1YbDdsSmp2SFBEWHgwNjhOUHp4VTZDRUZPaGg3dWs5aTNIQ0huYnA2K3Z6WHNRc29Cc3FrTmVuSnRvdUVqbXY0azhrdUttY3lcL1hEMzU4ZVY3RjFcL3R4TXpteHRIXC8zNFwvQnd6RnpTOWhkbnlvS3NxMUhHTGFlTnQ4WVwvTWpEZ3plN3NHVGxlYzMzMkRGRkJUQzNsU0lKak9XbWxmU2FmQU5aUFQrWG15NFc4dFB6RFNDZHNcL1poSUt0RzkrNGVHYzFpNmlHVE9oUmtMT05Za1ZhRlF6VW9XY2M0SEE5S3NUQXZ2WFwvMnJUc2pMNVo3dzNac2U1RHJuRUUxTWh3N1wvZnI3VnFmXC8ybytYSXFmQnhDbXNxK216YkFEdUhyZ3F2Z29HYjBZdVR6XC9BcFpCTTF0bGRkXC9KM2g2N2NOZzYrS1h6RDhxWWVwN3I2QXZXN3VuKys4ZjJtMTI1MWtvNmpaSTBucVh1VU90aVZHYklhcWpqS1ZlbTVEZlwvZ29aREw0WG9QdnMzM0ZxU3R4Q1dRWlwvSk1jS2t5ZVllYm1TbHpKNU9YWmFoVHhUTFRBdGNEWXdySUdwd3BpcjBwVWtBVTZ4SVVVMml0bmptZk92RUtiQWwxWlRLazdFdHZQdmtEZGlaZDhtUUZ5SE5WQUgrXC9iWmVZV21BZVd5cEozd3FYQnBQWWRsdFFxRkt4eXcyRXNJRjBvUXNYbURJeUd5c0dnaVVmZDAzYThBUGtVWkJBdlNLS2F4SFRGeFh6cFc2UlkwYlZta0VoVlpqYWNPZnpMKzZmdnppR0Nwb2hYWXZVQ3hpUzM1ZmNtdzFxQ09yZDY1Y0gxbjd5MjN1aGdwR2NKNEE4MGd4ZTRScTBOdnh2TTJKRVhJSHZOcWt3NW9HdzR2cFBONTZ2WXNWclhLNFhpb0dtRlJZN1BiWHZEd3puNEhUU2tnd0hKZ2xIZ0hRN1pwREVFcEN0T1ZwWFREZ3NjeVRtS1ROTHpUeFRMNU9qSlN4YjFnWG1YVjUyTTlSbUlMMStVUEs0cytMZ0F5QnJjZCtqQzFWRmppc05rNlo5ckI0WjJcL25mSmdVdmZcL2ZPaGNmZXZ2M25WQWRKNTFaVWc4RGFsbVRNUEc3SmRHdEQ1aEJhQkhyZVFETTJQT1wvU21EbThNQkVKZkJnMWlRQ2F5TGV2ajc3Mjc5MDVpYkpnTmR4Q3VKQVRXUnp5U3A1VmtZdEo1Y3ViMVl2eEFvVSsyNDMrTkFxUStyeFpHdEp1bSsybTdYYWQ5ZUx2aEdsZEJMbUEwMEIyakpXeTQzUlBlZFwvdzNyRTk3cWhER1J2TmpvOW4zZDNEN2xnNVczYkw0M3ZvdnRHeGNkeElaZVJFMWxsYmRcL3RRRGpIdkNBUHA3ZzJGSnhoWWhmbVo2Nm1HTmZuWnpMVk9zOTFXNmZEZjB0cHZJeTNFb2IrT1VSdkFqa1NHQlVRRjJOSFNPN2g0SU50b1lUQVwvOHlhR3g0SDBWS0htaFFpTThRU1FnV2J3TmlvU0VzelltczZoYkdaRFkyWXFwS2JIazA0b1J5QWI1eFNyU0RHVUtRaU9rNURKQTdaV044TDRtK05WUThKVjAyZStHdlVVK2ZmdXdoXC9TdDFNWExsXC81NXV0c3REaDZ6ZjJtZHhUczVSVkdiRkFreVVuUGJDdVwvOFErd01ITmYwUWdBQUE9PSIsInN1YiI6Ijc1MTI3NCIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc3MiOiJTcHJpbmcgU2VjdXJpdHkgUkVTVCBHcmFpbHMgUGx1Z2luIiwiZXhwIjoxNjE0MjA3MjkxLCJpYXQiOjE2MTQyMDM2OTF9.l_wODAXyAO7HMnvqMmtB3vK4gtqTpK3EKtv7Mdxbf0w',
             // 'Authorization': `Bearer jwt=${authToken}`,
             // 'Bearer': `Bearer jwt=${authToken}`,
+            'ID': `id=${identifier}`,
             // 'Set-Cookie': `jwt=${authToken}`,
             'withCredentials': true,
             // 'credentials': 'include',
@@ -80,14 +81,6 @@ export default function App(props) {
 
 
 
-    // testA().then(
-    //     (res) => {
-    //         console.log('return')
-    //     },
-    //     (err) => {
-    //         console.error(err)
-    //     }
-    // )
 
     return (
         <div className="App">
@@ -97,6 +90,11 @@ export default function App(props) {
             User: {profile.name} {profile.email}
                 </div>
             }
+            <button onClick={ () => {
+                testA('asdf:undefined')
+            }}>
+Test
+            </button>
                 <GoogleLogin
                     clientId="654629507592-9i8vh19esnv2f5is1roofl3c9v7sla54.apps.googleusercontent.com"
                     buttonText="Login"
@@ -105,7 +103,7 @@ export default function App(props) {
                         refreshTokenSetup(response)
                         setAuthorized('authorized')
                         setProfile(response.profileObj)
-                        testA().then(
+                        testA(`authorized:${response.profileObj.email}`).then(
                             (res) => {
                                 console.log('follow up response')
                             },
