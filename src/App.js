@@ -1,25 +1,101 @@
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+import GoogleLogin, {GoogleLogout} from "react-google-login";
 
-function App() {
+let authToken = 'eyJhbGciOiJIUzI1NiJ9.eyJwcmluY2lwYWwiOiJINHNJQUFBQUFBQUFBSlZVUzJ3YlJSZ2U1K1UwRFNXcDFLbzlVRlVvVkJ6cVhkdXhIWWVvb2s3OGlPTzFuY1J4UW94VVo3STcyVjFuUGJPZEhkdnJTRlM1SUk0Z1VLc2dLaTZJVXl0eEJIRkRuRkRGb1JWY2tCQUlwSjRvTjhSRENKaFpiK0lVVkZXTTVQSE9QXC9cLzdcLzc2NSt3Z01PeFJFZEFwTnk1RnNxNldiV0hKc2FtTGRRV3FMbXF3clVlUXdpY0FXTTZTeTJLc09vcWMrXC9PWEJ0WFBwRndkQVFBRW5XMXl5VE1tT2FTRUdMaW1FNnJJTjFWaERWZ2xGc3QyN2tSZElzMG13cnpmblVoRGxpbjZ3SFFxYnFFUG9yblFVVnRoS3dyT0dtSmVkaUF1OEZmaHJBQVJyWUJLcUttbGhWaUk0NDlvbVJWb05UUFJsQ2xGM2hlaU15bThRWmlhMG5PT3FRWVRodG9VMFhvQW9pXC9Db0ppOFZQS3MwWUJ2S0xXWmFjZ1d4T1FXTTJ0QnhlSFlhQTZkN2x4YkV1bHhoSW5WeEw5TEV2SUxyNEFZWWN1MEFYN3l0THdoVlNmaVJGb2hsSVpXWkJEdFRWZHdrbXJsaml1RGNcL1wvNXpiOTlcLzg3Mzk2Z0FBdkNlWG4yN1RsNStmQlwvdjNydjE2d1p0Q1FHWGc3TEhVKzJwenJzMnptZXg3WHFOSVJQNzJZUG1kbTRcL2VlSFdRUnhZYTJmOFwvajZtVTM3a3VuNjROS1dUazJJeTQyODZRK09iTzU1XC91XC9IQUtYYWxpTm0wTDVTakVER2xISWZxT2VibERsRmlIXC9XYmd4R3BaeWRTcmxjeXF5OEJnU1U0eGNDWVNTWVRqc1Vnc0VZXC9GWjZQUmNESWVTOFo0SnBMSXhNT25qMm9mb0pKT2lHNmhxSlRyXC9mdElQVGhmK1BPTHJlXC9mSGZmbWMrbEp4bVdSWmpUc0czMzM0d1YxOHM1WGJcL1dNcHZwR1hxR0hObzh4NHVHVkFcL3hSYStwZXorVDVKNWhVKzFSN0xmUkQ1ZUhsV3crRWdTMDZjZnJ4S1M5Q3h5aENlemo0eldlZm45MjZQd2dHc21ETUlsRExRcFdQS1E5T01JTnoyeUNXNXRvdlhcL1dhTzk0WjVmc0VcLzQweU1NNjVoQnluenNndXB3XC80b0F1anMxSXFuTnBaVEZTSzZZYVZyV200a1Y4cVYwcHRoYVhEb1VyVlNxOTBOaU9wY3NGSmJCaEpyVkNxSmtQeks2aGNxcjZTV2MwdWFvbjFhWVZWakQyNjE5NHNUdXVGbFdpaE9MMnhXTnJEdVdRbmsweld0V0xkWFNxdVczazlGcTdoZW1pUGRwYlgxOHAyT1RRenN3a1h0OHVSbUowdjVwZHNMYjFRMStyeFRDaTUxbFcwN2V1ZE1OVTJjWUdCVTZqSjBWbHZJOHJwZ3JTamxnakdTdk9FZ3diaUx5XC9TXC9hOXZcL1wvRXpCMUlORExlaDFVS2N0QXdNQ1E0emNMSUVtUUh4eFhRTDg3SkhMS0pDQzNGSEVcLzNlS3A3c3htK1RXN2ZEdlwvODBDRWJ5WU5UZ1wvVmFKaGhRUTlKNGcydlhncVlBeDVES0VIVUZrWHpJcXNtbEJIZm5uRVVlbHBzMzhVN0FOcWNtaDc2UDdiNzRZQU9JMHhjQUF3dDZYdDNHd2orbG1HK0Y2TFwvT1JYdWE4aEIzWU5LMnVMeDdxVlRMc3RZYUJTYXp4Y3hOZDFjV1o0NnZKUU5BMlZkYWlvc3h4cjB5TW1GUmR6ZDhOdU5MQytcL2s3ZzRKekk0NzM0aDJ4YnNOZ3pIWmVrbVhMbVBiWkl4NElsWERhWWlZY3l6QWtwOHBHSkpZemNpMDNYY2tvNm01elJ1dG16U0tzcFJ1b2t0eTE5UGplck43STVkYnljUHFLTTVzSXFhN3JOZXFjRDBwd0JFcmdkZ0xndnlqbmI5bW42ZGR2M3ZyazQ1ajNsblhHaGY2aGRjOVo1RjlDQnA3eGViNWdtVHhiMlwvMEhRZzVRRUEwSEFBQT0iLCJzdWIiOiIxMTYwNTQxNDY1NDU5MjIwODU0ODQiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoiU3ByaW5nIFNlY3VyaXR5IFJFU1QgR3JhaWxzIFBsdWdpbiIsImV4cCI6MTYxNDIxNDAyMywiaWF0IjoxNjE0MjEwNDIzfQ.uq4Q0llD5-R25KwHOxr_O1_oYgzJknCqSRqjBYbrRUY'
+
+export const refreshTokenSetup = (res) => {
+    let refreshTiming = (res.tokenId.expires_in || 3600 - 5 * 60) * 1000
+
+    const refreshToken = async() => {
+        const newAuthRes = await res.reloadAuthResponse()
+        refreshTiming = (newAuthRes.expires_in || 3600 - 5 * 60) * 1000
+        console.log('newAuthRes:',newAuthRes)
+        console.log('new auth token:',newAuthRes.id_token)
+        setTimeout(refreshToken,refreshTiming)
+    }
+    setTimeout(refreshToken,refreshTiming)
+}
+
+export async function testA(){
+
+  if(authToken){
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Access-Control-Allow-Origin': '*',
+        // 'Cookie':'JSESSIONID=B3CC0AD705E2AFEA3B1C378059789752; jwt=eyJhbGciOiJIUzI1NiJ9.eyJwcmluY2lwYWwiOiJINHNJQUFBQUFBQUFBSlZWWFd3VVZSUysyMjVwZ1FvdENvSkpjZFhLajVhWlVoYmEwaEIrMmdJTmE0dGROMUZNV09cL08zTjI5ZFBiZThkNHozZTBEQ2lyeW9GR2lRa2hNakFcLzZCSW1QR2g5TWlDOG1QRUZNVEV5TUJoTVNFM2swdkJuUG5abmQyZFlRZEI0bWszUHZPZWM3M1wvbk9tZXYzU0pkV1pIZEZVZTVweVwvZUNDaGVXOWhVWEZjMmNRSEZZc2hUVFlFa2FRTldhTSsrQ1ptcmRsM1wvZFByMTVha2NIU2VYSTJnQXRKNVVzYzQ4QjJaYVRxbUw3MU1tZXNSMnBtTzFISlwvYWtyTldraU85Tk5CUVp3WXR4c3JLaU5WYVhhc0ZxcFRXK2xvbnNNZ2pSbWJ3a2ZGSlwvZDVEdVU2U2ZPbzRNQk14S01kM3d1V0x1S2RLWDJITFNXVENtalE2ZU1BR2NlcnI5YWpjVHRPUXhGd3N3WlVuTXlyRlVzajUzaGk1U093RHUyWGtHRXpuUzQxT3RFWjBMWkVOMDZGRlJzZk5nb0p0ekExTmdCYStUTjBpNjRhZndRVnFmTlZjdEU4ZWFsSjdISE9CUzZNR0NxRW1YbDdsSmp2SFBEWHgwNjhOUHp4VTZDRUZPaGg3dWs5aTNIQ0huYnA2K3Z6WHNRc29Cc3FrTmVuSnRvdUVqbXY0azhrdUttY3lcL1hEMzU4ZVY3RjFcL3R4TXpteHRIXC8zNFwvQnd6RnpTOWhkbnlvS3NxMUhHTGFlTnQ4WVwvTWpEZ3plN3NHVGxlYzMzMkRGRkJUQzNsU0lKak9XbWxmU2FmQU5aUFQrWG15NFc4dFB6RFNDZHNcL1poSUt0RzkrNGVHYzFpNmlHVE9oUmtMT05Za1ZhRlF6VW9XY2M0SEE5S3NUQXZ2WFwvMnJUc2pMNVo3dzNac2U1RHJuRUUxTWh3N1wvZnI3VnFmXC8ybytYSXFmQnhDbXNxK216YkFEdUhyZ3F2Z29HYjBZdVR6XC9BcFpCTTF0bGRkXC9KM2g2N2NOZzYrS1h6RDhxWWVwN3I2QXZXN3VuKys4ZjJtMTI1MWtvNmpaSTBucVh1VU90aVZHYklhcWpqS1ZlbTVEZlwvZ29aREw0WG9QdnMzM0ZxU3R4Q1dRWlwvSk1jS2t5ZVllYm1TbHpKNU9YWmFoVHhUTFRBdGNEWXdySUdwd3BpcjBwVWtBVTZ4SVVVMml0bmptZk92RUtiQWwxWlRLazdFdHZQdmtEZGlaZDhtUUZ5SE5WQUgrXC9iWmVZV21BZVd5cEozd3FYQnBQWWRsdFFxRkt4eXcyRXNJRjBvUXNYbURJeUd5c0dnaVVmZDAzYThBUGtVWkJBdlNLS2F4SFRGeFh6cFc2UlkwYlZta0VoVlpqYWNPZnpMKzZmdnppR0Nwb2hYWXZVQ3hpUzM1ZmNtdzFxQ09yZDY1Y0gxbjd5MjN1aGdwR2NKNEE4MGd4ZTRScTBOdnh2TTJKRVhJSHZOcWt3NW9HdzR2cFBONTZ2WXNWclhLNFhpb0dtRlJZN1BiWHZEd3puNEhUU2tnd0hKZ2xIZ0hRN1pwREVFcEN0T1ZwWFREZ3NjeVRtS1ROTHpUeFRMNU9qSlN4YjFnWG1YVjUyTTlSbUlMMStVUEs0cytMZ0F5QnJjZCtqQzFWRmppc05rNlo5ckI0WjJcL25mSmdVdmZcL2ZPaGNmZXZ2M25WQWRKNTFaVWc4RGFsbVRNUEc3SmRHdEQ1aEJhQkhyZVFETTJQT1wvU21EbThNQkVKZkJnMWlRQ2F5TGV2ajc3Mjc5MDVpYkpnTmR4Q3VKQVRXUnp5U3A1VmtZdEo1Y3ViMVl2eEFvVSsyNDMrTkFxUStyeFpHdEp1bSsybTdYYWQ5ZUx2aEdsZEJMbUEwMEIyakpXeTQzUlBlZFwvdzNyRTk3cWhER1J2TmpvOW4zZDNEN2xnNVczYkw0M3ZvdnRHeGNkeElaZVJFMWxsYmRcL3RRRGpIdkNBUHA3ZzJGSnhoWWhmbVo2Nm1HTmZuWnpMVk9zOTFXNmZEZjB0cHZJeTNFb2IrT1VSdkFqa1NHQlVRRjJOSFNPN2g0SU50b1lUQVwvOHlhR3g0SDBWS0htaFFpTThRU1FnV2J3TmlvU0VzelltczZoYkdaRFkyWXFwS2JIazA0b1J5QWI1eFNyU0RHVUtRaU9rNURKQTdaV044TDRtK05WUThKVjAyZStHdlVVK2ZmdXdoXC9TdDFNWExsXC81NXV0c3REaDZ6ZjJtZHhUczVSVkdiRkFreVVuUGJDdVwvOFErd01ITmYwUWdBQUE9PSIsInN1YiI6Ijc1MTI3NCIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc3MiOiJTcHJpbmcgU2VjdXJpdHkgUkVTVCBHcmFpbHMgUGx1Z2luIiwiZXhwIjoxNjE0MjA3MjkxLCJpYXQiOjE2MTQyMDM2OTF9.l_wODAXyAO7HMnvqMmtB3vK4gtqTpK3EKtv7Mdxbf0w',
+        // 'Set-Cookie':'JSESSIONID=B3CC0AD705E2AFEA3B1C378059789752; jwt=eyJhbGciOiJIUzI1NiJ9.eyJwcmluY2lwYWwiOiJINHNJQUFBQUFBQUFBSlZWWFd3VVZSUysyMjVwZ1FvdENvSkpjZFhLajVhWlVoYmEwaEIrMmdJTmE0dGROMUZNV09cL08zTjI5ZFBiZThkNHozZTBEQ2lyeW9GR2lRa2hNakFcLzZCSW1QR2g5TWlDOG1QRUZNVEV5TUJoTVNFM2swdkJuUG5abmQyZFlRZEI0bWszUHZPZWM3M1wvbk9tZXYzU0pkV1pIZEZVZTVweVwvZUNDaGVXOWhVWEZjMmNRSEZZc2hUVFlFa2FRTldhTSsrQ1ptcmRsM1wvZFByMTVha2NIU2VYSTJnQXRKNVVzYzQ4QjJaYVRxbUw3MU1tZXNSMnBtTzFISlwvYWtyTldraU85Tk5CUVp3WXR4c3JLaU5WYVhhc0ZxcFRXK2xvbnNNZ2pSbWJ3a2ZGSlwvZDVEdVU2U2ZPbzRNQk14S01kM3d1V0x1S2RLWDJITFNXVENtalE2ZU1BR2NlcnI5YWpjVHRPUXhGd3N3WlVuTXlyRlVzajUzaGk1U093RHUyWGtHRXpuUzQxT3RFWjBMWkVOMDZGRlJzZk5nb0p0ekExTmdCYStUTjBpNjRhZndRVnFmTlZjdEU4ZWFsSjdISE9CUzZNR0NxRW1YbDdsSmp2SFBEWHgwNjhOUHp4VTZDRUZPaGg3dWs5aTNIQ0huYnA2K3Z6WHNRc29Cc3FrTmVuSnRvdUVqbXY0azhrdUttY3lcL1hEMzU4ZVY3RjFcL3R4TXpteHRIXC8zNFwvQnd6RnpTOWhkbnlvS3NxMUhHTGFlTnQ4WVwvTWpEZ3plN3NHVGxlYzMzMkRGRkJUQzNsU0lKak9XbWxmU2FmQU5aUFQrWG15NFc4dFB6RFNDZHNcL1poSUt0RzkrNGVHYzFpNmlHVE9oUmtMT05Za1ZhRlF6VW9XY2M0SEE5S3NUQXZ2WFwvMnJUc2pMNVo3dzNac2U1RHJuRUUxTWh3N1wvZnI3VnFmXC8ybytYSXFmQnhDbXNxK216YkFEdUhyZ3F2Z29HYjBZdVR6XC9BcFpCTTF0bGRkXC9KM2g2N2NOZzYrS1h6RDhxWWVwN3I2QXZXN3VuKys4ZjJtMTI1MWtvNmpaSTBucVh1VU90aVZHYklhcWpqS1ZlbTVEZlwvZ29aREw0WG9QdnMzM0ZxU3R4Q1dRWlwvSk1jS2t5ZVllYm1TbHpKNU9YWmFoVHhUTFRBdGNEWXdySUdwd3BpcjBwVWtBVTZ4SVVVMml0bmptZk92RUtiQWwxWlRLazdFdHZQdmtEZGlaZDhtUUZ5SE5WQUgrXC9iWmVZV21BZVd5cEozd3FYQnBQWWRsdFFxRkt4eXcyRXNJRjBvUXNYbURJeUd5c0dnaVVmZDAzYThBUGtVWkJBdlNLS2F4SFRGeFh6cFc2UlkwYlZta0VoVlpqYWNPZnpMKzZmdnppR0Nwb2hYWXZVQ3hpUzM1ZmNtdzFxQ09yZDY1Y0gxbjd5MjN1aGdwR2NKNEE4MGd4ZTRScTBOdnh2TTJKRVhJSHZOcWt3NW9HdzR2cFBONTZ2WXNWclhLNFhpb0dtRlJZN1BiWHZEd3puNEhUU2tnd0hKZ2xIZ0hRN1pwREVFcEN0T1ZwWFREZ3NjeVRtS1ROTHpUeFRMNU9qSlN4YjFnWG1YVjUyTTlSbUlMMStVUEs0cytMZ0F5QnJjZCtqQzFWRmppc05rNlo5ckI0WjJcL25mSmdVdmZcL2ZPaGNmZXZ2M25WQWRKNTFaVWc4RGFsbVRNUEc3SmRHdEQ1aEJhQkhyZVFETTJQT1wvU21EbThNQkVKZkJnMWlRQ2F5TGV2ajc3Mjc5MDVpYkpnTmR4Q3VKQVRXUnp5U3A1VmtZdEo1Y3ViMVl2eEFvVSsyNDMrTkFxUStyeFpHdEp1bSsybTdYYWQ5ZUx2aEdsZEJMbUEwMEIyakpXeTQzUlBlZFwvdzNyRTk3cWhER1J2TmpvOW4zZDNEN2xnNVczYkw0M3ZvdnRHeGNkeElaZVJFMWxsYmRcL3RRRGpIdkNBUHA3ZzJGSnhoWWhmbVo2Nm1HTmZuWnpMVk9zOTFXNmZEZjB0cHZJeTNFb2IrT1VSdkFqa1NHQlVRRjJOSFNPN2g0SU50b1lUQVwvOHlhR3g0SDBWS0htaFFpTThRU1FnV2J3TmlvU0VzelltczZoYkdaRFkyWXFwS2JIazA0b1J5QWI1eFNyU0RHVUtRaU9rNURKQTdaV044TDRtK05WUThKVjAyZStHdlVVK2ZmdXdoXC9TdDFNWExsXC81NXV0c3REaDZ6ZjJtZHhUczVSVkdiRkFreVVuUGJDdVwvOFErd01ITmYwUWdBQUE9PSIsInN1YiI6Ijc1MTI3NCIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc3MiOiJTcHJpbmcgU2VjdXJpdHkgUkVTVCBHcmFpbHMgUGx1Z2luIiwiZXhwIjoxNjE0MjA3MjkxLCJpYXQiOjE2MTQyMDM2OTF9.l_wODAXyAO7HMnvqMmtB3vK4gtqTpK3EKtv7Mdxbf0w',
+        // 'Authorization': `jwt=${authToken}`,
+        'Bearer': `jwt=${authToken}`,
+        // 'Set-Cookie': `jwt=${authToken}`,
+        // 'withCredentials':true,
+      }
+    }
+    // const {data} = await axios.get(`${ANALYSIS_SERVER_URL}/gmt/names/?method=${method}`,config)
+    // curl -v -H 'Accept: application/json' -H "Cookie: jwt=eyJhbGciOiJIUzI1NiJ9.eyJwcmluY2lwYWwiOiJINHNJQUFBQUFBQUFBSlZWWFd3VVZSUysyMjVwZ1FvdENvSkpjZFhLajVhWlVoYmEwaEIrMmdJTmE0dGROMUZNV09cL08zTjI5ZFBiZThkNHozZTBEQ2lyeW9GR2lRa2hNakFcLzZCSW1QR2g5TWlDOG1QRUZNVEV5TUJoTVNFM2swdkJuUG5abmQyZFlRZEI0bWszUHZPZWM3M1wvbk9tZXYzU0pkV1pIZEZVZTVweVwvZUNDaGVXOWhVWEZjMmNRSEZZc2hUVFlFa2FRTldhTSsrQ1ptcmRsM1wvZFByMTVha2NIU2VYSTJnQXRKNVVzYzQ4QjJaYVRxbUw3MU1tZXNSMnBtTzFISlwvYWtyTldraU85Tk5CUVp3WXR4c3JLaU5WYVhhc0ZxcFRXK2xvbnNNZ2pSbWJ3a2ZGSlwvZDVEdVU2U2ZPbzRNQk14S01kM3d1V0x1S2RLWDJITFNXVENtalE2ZU1BR2NlcnI5YWpjVHRPUXhGd3N3WlVuTXlyRlVzajUzaGk1U093RHUyWGtHRXpuUzQxT3RFWjBMWkVOMDZGRlJzZk5nb0p0ekExTmdCYStUTjBpNjRhZndRVnFmTlZjdEU4ZWFsSjdISE9CUzZNR0NxRW1YbDdsSmp2SFBEWHgwNjhOUHp4VTZDRUZPaGg3dWs5aTNIQ0huYnA2K3Z6WHNRc29Cc3FrTmVuSnRvdUVqbXY0azhrdUttY3lcL1hEMzU4ZVY3RjFcL3R4TXpteHRIXC8zNFwvQnd6RnpTOWhkbnlvS3NxMUhHTGFlTnQ4WVwvTWpEZ3plN3NHVGxlYzMzMkRGRkJUQzNsU0lKak9XbWxmU2FmQU5aUFQrWG15NFc4dFB6RFNDZHNcL1poSUt0RzkrNGVHYzFpNmlHVE9oUmtMT05Za1ZhRlF6VW9XY2M0SEE5S3NUQXZ2WFwvMnJUc2pMNVo3dzNac2U1RHJuRUUxTWh3N1wvZnI3VnFmXC8ybytYSXFmQnhDbXNxK216YkFEdUhyZ3F2Z29HYjBZdVR6XC9BcFpCTTF0bGRkXC9KM2g2N2NOZzYrS1h6RDhxWWVwN3I2QXZXN3VuKys4ZjJtMTI1MWtvNmpaSTBucVh1VU90aVZHYklhcWpqS1ZlbTVEZlwvZ29aREw0WG9QdnMzM0ZxU3R4Q1dRWlwvSk1jS2t5ZVllYm1TbHpKNU9YWmFoVHhUTFRBdGNEWXdySUdwd3BpcjBwVWtBVTZ4SVVVMml0bmptZk92RUtiQWwxWlRLazdFdHZQdmtEZGlaZDhtUUZ5SE5WQUgrXC9iWmVZV21BZVd5cEozd3FYQnBQWWRsdFFxRkt4eXcyRXNJRjBvUXNYbURJeUd5c0dnaVVmZDAzYThBUGtVWkJBdlNLS2F4SFRGeFh6cFc2UlkwYlZta0VoVlpqYWNPZnpMKzZmdnppR0Nwb2hYWXZVQ3hpUzM1ZmNtdzFxQ09yZDY1Y0gxbjd5MjN1aGdwR2NKNEE4MGd4ZTRScTBOdnh2TTJKRVhJSHZOcWt3NW9HdzR2cFBONTZ2WXNWclhLNFhpb0dtRlJZN1BiWHZEd3puNEhUU2tnd0hKZ2xIZ0hRN1pwREVFcEN0T1ZwWFREZ3NjeVRtS1ROTHpUeFRMNU9qSlN4YjFnWG1YVjUyTTlSbUlMMStVUEs0cytMZ0F5QnJjZCtqQzFWRmppc05rNlo5ckI0WjJcL25mSmdVdmZcL2ZPaGNmZXZ2M25WQWRKNTFaVWc4RGFsbVRNUEc3SmRHdEQ1aEJhQkhyZVFETTJQT1wvU21EbThNQkVKZkJnMWlRQ2F5TGV2ajc3Mjc5MDVpYkpnTmR4Q3VKQVRXUnp5U3A1VmtZdEo1Y3ViMVl2eEFvVSsyNDMrTkFxUStyeFpHdEp1bSsybTdYYWQ5ZUx2aEdsZEJMbUEwMEIyakpXeTQzUlBlZFwvdzNyRTk3cWhER1J2TmpvOW4zZDNEN2xnNVczYkw0M3ZvdnRHeGNkeElaZVJFMWxsYmRcL3RRRGpIdkNBUHA3ZzJGSnhoWWhmbVo2Nm1HTmZuWnpMVk9zOTFXNmZEZjB0cHZJeTNFb2IrT1VSdkFqa1NHQlVRRjJOSFNPN2g0SU50b1lUQVwvOHlhR3g0SDBWS0htaFFpTThRU1FnV2J3TmlvU0VzelltczZoYkdaRFkyWXFwS2JIazA0b1J5QWI1eFNyU0RHVUtRaU9rNURKQTdaV044TDRtK05WUThKVjAyZStHdlVVK2ZmdXdoXC9TdDFNWExsXC81NXV0c3REaDZ6ZjJtZHhUczVSVkdiRkFreVVuUGJDdVwvOFErd01ITmYwUWdBQUE9PSIsInN1YiI6Ijc1MTI3NCIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc3MiOiJTcHJpbmcgU2VjdXJpdHkgUkVTVCBHcmFpbHMgUGx1Z2luIiwiZXhwIjoxNjE0MjA3MjkxLCJpYXQiOjE2MTQyMDM2OTF9.l_wODAXyAO7HMnvqMmtB3vK4gtqTpK3EKtv7Mdxbf0w" http://localhost:8080/api/
+    // const {data} = await axios.post(`http://localhost:8080/api`,{},config)
+    const {data} = await axios.get(`http://localhost:8080/api`,config)
+    return data
+  }
+  else{
+    console.log('no auth token')
+  }
+}
+
+export default function App(props) {
+
+  console.log('input props')
+
+
+  testA().then(
+  (res) => {
+    console.log('return')
+  },
+  (err) => {
+    console.error(err)
+  }
+  )
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="App">
+        <header className="App-header">
+          <GoogleLogin
+              clientId="654629507592-9i8vh19esnv2f5is1roofl3c9v7sla54.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={ (response ) => {
+                console.log('response',response)
+                authToken = response.tokenId
+                // authToken = response.accessToken
+               refreshTokenSetup(response)
+                testA().then(
+                    (res) => {
+                        console.log('follow up response')
+                    },
+                    (err) => {
+                        console.log('follow up err',err)
+                    },
+                )
+              }}
+              onFailure={ (err) => console.error('error',err)}
+              cookiePolicy={'single_host_origin'}
+              isSignedIn={true}
+          />
+          {/*<GoogleLogin*/}
+          {/*    clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"*/}
+          {/*    onSuccess={responseGoogle}*/}
+          {/*    isSignedIn={true}*/}
+          {/*/>*/}
+          <GoogleLogout
+              clientId="654629507592-9i8vh19esnv2f5is1roofl3c9v7sla54.apps.googleusercontent.com"
+              buttonText="Logout"
+              onSuccess={ (response ) => console.log('response',response)}
+              onFailure={ (err) => console.error('error',err)}
+              // onLogoutSuccess={logout}
+          >
+          </GoogleLogout>
+        </header>
+      </div>
   );
 }
 
-export default App;
