@@ -91,7 +91,7 @@ export default function App(props) {
                 </div>
             }
             <button onClick={ () => {
-                testA('asdf:undefined')
+                testA(`${authorized}:${profile.email}`)
             }}>
 Test
             </button>
